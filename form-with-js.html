@@ -77,6 +77,7 @@
                 <textarea style="height: 8rem;"id="comment-field" name="comments" placeholder="Enter comments.."></textarea>
                 <p id="char-count" style="text-align: right; margin: 0;">250</p>
                 <input type="submit" value="Send"/>
+                <input type="hidden" id="form-errors" name="form_errors" value="">
                 <input type="hidden" name="possible_bot" value="true">
             </fieldset>
             <output id="err-msg"></output>
@@ -88,6 +89,11 @@
             let email = document.getElementById("email-field");
             let comments = document.getElementById("comment-field");
             let charCounter = document.getElementById("char-count");
+            let formErrors = document.getElementById("form-errors");
+
+            // TODO: change this bro
+            let form_errors = ["name_error", "email_error", "email_error", "email_error", "comments_too_long"];
+            formErrors.value = JSON.stringify(form_errors);
 
             let errorfield = document.getElementById("err-msg");
 
