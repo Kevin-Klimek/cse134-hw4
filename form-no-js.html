@@ -6,15 +6,41 @@
         <meta name="viewport" content="width=device-width,initial-scale=1"/>
         <title>Contact Form</title>
         <style>
-            /* Page styling
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+            }
             form {
+                /* border: 1px solid black; */
+                width: 25rem;
                 display: flex;
                 flex-direction: column;
                 justify-content: space-around;
+            }
+            
+            fieldset {
+                display: flex;
+                flex-direction: column;
+            }
 
-            } */
-            form-field {
-                display: block;
+            fieldset > *:not(legend){
+                width: 20rem;
+            }
+
+            input {
+                margin: 1px 0 15px 0;
+            }
+
+            input[type="submit"] {
+                width: 6rem;
+            }
+            
+            /* Styles invalid elements that have been fully filled in (no placeholder shown, not still in focus with a red border */
+            /* Also styles required fields that are invalid after hitting submit button the same way, regardless of placeholder/content */
+            input:not(:placeholder-shown):not(:focus):invalid, input:required:user-invalid {
+                border: 2px solid red;
             }
         </style>
     </head>
@@ -22,14 +48,16 @@
         <form action="https://httpbin.org/post" method="POST">
             <fieldset>
                 <legend>Contact Me!</legend>
-                <label for="name-field">Name:</label>
-                <input type="text" id="name-field" name="name" placeholder="Enter your First and Last name" required/>
-                <label for="email-field">Email:</label>
-                <input type="email" id="email-field" name="email" placeholder="user@domain.com" required/>
-                <textarea style="display: block; margin: 1rem 0;"id="comment-field" name="comments" placeholder="Enter comments.."></textarea>
+                <label for="name-field">Name [Required]:</label>
+                <input type="text" id="name-field" name="name" placeholder="Enter your First and Last name" required minlength="3" maxlength="30" pattern="^[a-zA-Z ]*$"/>
+                <label for="email-field">Email [Required]:</label>
+                <input type="email" id="email-field" name="email" placeholder="user@domain.com" required minlength="3" maxlength="30"/>
+                <textarea style="display: block; margin: 1rem 0; height: 5rem;"id="comment-field" name="comments" placeholder="Enter comments.."></textarea>
                 <input type="submit" value="Send"/>
                 <input type="hidden" name="possible_bot" value="true">
             </fieldset>
+            <output id="err-msg"></output>
+            <output id="info-msg"></output>
         </form>
     </body>
 </html>
