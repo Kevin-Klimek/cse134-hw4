@@ -37,6 +37,28 @@
                 width: 6rem;
             }
             
+            [data-invalid] {
+                animation: flashShadow 1s ease-out forwards;
+            }
+
+            @keyframes flashShadow {
+                0% {
+                    box-shadow: 0 0 0 red;
+                }
+
+                50% {
+                    box-shadow: 0 0 10px red;
+                }
+
+                100% {
+                    box-shadow: 0 0 0 red;
+                }
+            }
+
+            #err-msg {
+                font-weight: bold;
+            }
+            
             /* Styles invalid elements that have been fully filled in (no placeholder shown, not still in focus with a red border */
             /* Also styles required fields that are invalid after hitting submit button the same way, regardless of placeholder/content */
             input:not(:placeholder-shown):not(:focus):invalid, input:required:user-invalid {
@@ -52,12 +74,76 @@
                 <input type="text" id="name-field" name="name" placeholder="Enter your First and Last name" required minlength="3" maxlength="30" pattern="^[a-zA-Z ]*$"/>
                 <label for="email-field">Email [Required]:</label>
                 <input type="email" id="email-field" name="email" placeholder="user@domain.com" required minlength="3" maxlength="30"/>
-                <textarea style="display: block; margin: 1rem 0; height: 5rem;"id="comment-field" name="comments" placeholder="Enter comments.."></textarea>
+                <textarea style="height: 8rem;"id="comment-field" name="comments" placeholder="Enter comments.."></textarea>
+                <p id="char-count" style="text-align: right; margin: 0;">250</p>
                 <input type="submit" value="Send"/>
                 <input type="hidden" name="possible_bot" value="true">
             </fieldset>
             <output id="err-msg"></output>
             <output id="info-msg"></output>
         </form>
+
+        <script>
+            let name = document.getElementById("name-field");
+            let email = document.getElementById("email-field");
+            let comments = document.getElementById("comment-field");
+            let charCounter = document.getElementById("char-count");
+
+            let errorfield = document.getElementById("err-msg");
+
+            name.addEventListener("input", nameValidityCheck);
+            email.addEventListener("input", emailValidityCheck);
+            comments.addEventListener("input", updateCharCount);
+
+            function emailValidityCheck() {
+                if (email.validity.typeMismatch) {
+                    email.setCustomValidity("Invalid email address!");
+                    errorOutput("Invalid email address!");
+                    email.setAttribute("data-invalid", "true");
+                }
+                else {
+                    email.setCustomValidity("");
+                    email.removeAttribute("data-invalid");
+                }
+                email.reportValidity();
+            }
+
+            function nameValidityCheck() {
+                if (name.validity.patternMismatch) {
+                    name.setCustomValidity("Only input A-Z please!");
+                    name.setAttribute("data-invalid", "true");
+                    errorOutput("Only input A-Z please!");
+                }
+                else {
+                    name.setCustomValidity("");
+                    name.removeAttribute("data-invalid");
+                }
+                name.reportValidity();
+            }
+
+            function errorOutput(errorText) {
+                errorfield.textContent = errorText;
+                setTimeout(clearError, 3000);
+            }
+
+            function clearError() {
+                errorfield.textContent = "";
+            }
+
+            function updateCharCount() {
+                let charCount = 250 - comments.value.length;
+                if (charCount < 50) {
+                    charCounter.style.fontWeight = "bold";
+                    if (charCount < 0) {
+                        charCounter.style.color = "red";
+                    }
+                }
+                else {
+                    charCounter.style.fontWeight = "normal";
+                    charCounter.style.color = "black";
+                }
+                charCounter.textContent = charCount.toString();
+            }
+        </script>
     </body>
 </html>
